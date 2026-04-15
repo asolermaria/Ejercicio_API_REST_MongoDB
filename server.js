@@ -21,8 +21,10 @@ app.use(morgan("dev"));
 
 // Rutas
 const routesProviders = require("./routes/providers.routes")
+const routesProducts = require("./routes/products.routes")
 
 app.use("/api/providers", routesProviders)
+app.use("/api/products", routesProducts)
 
 // Servidor
 const PORT = process.env.PORT || 3000;
