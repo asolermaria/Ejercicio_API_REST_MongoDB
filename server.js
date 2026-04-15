@@ -1,7 +1,6 @@
 // Importa Express
 const express = require('express');
 
-
 // Importa la función que conecta con MongoDB
 const connectDB = require ("./config/db_mongo")
 require('dotenv').config();
