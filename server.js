@@ -1,5 +1,6 @@
 // Importa Express
 const express = require('express');
+const morgan = require("morgan");
 
 // Importa la función que conecta con MongoDB
 const connectDB = require ("./config/db_mongo")
@@ -15,6 +16,8 @@ connectDB()
 //Parsear el "body" entrante a JSON
 //Middleware (operación intermedia)
 app.use(express.json());
+
+app.use(morgan("dev"));
 
 // Rutas
 const routesProviders = require("./routes/providers.routes")
