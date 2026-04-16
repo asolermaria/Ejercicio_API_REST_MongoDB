@@ -23,19 +23,74 @@ const getProducts = async (req, res) => {
 
 // POST
 // http://localhost:3000/api/products
-// const createProducts = async (req, res) => {
-//   try {
-//     const { company_name, CIF, address, url_web } = req.body;
+const createProduct = async (req, res) => {
+  try {
+    const { title, price, description, company_name } = req.body;
 
-//     if (!company_name || !CIF || !address || !url_web) {
+    if (!title || !price || !description || !company_name) {
+      return res.status(400).json({
+        message:
+          "Faltan datos obligatorios: { title, price, description, company_name }",
+      });
+    }
+
+    const provider = await Provider.findOne({ company_name });
+
+    if (!provider) {
+      return res.status(404).json({ message: "Proveedor no encontrado" });
+    }
+
+    const product = await Product.create({
+      title,
+      price,
+      description,
+      provider: provider._id,
+    });
+
+    res
+      .status(201)
+      .json({ message: `Producto creado: ${product.title}`, product });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error del servidor" });
+  }
+};
+
+// PUT
+// http://localhost:3000/api/products
+// const updateProducts = async (req, res) => {
+//   const { title, price, description, provider } = req.body;
+
+//   try {
+//     if (!title) {
 //       return res.status(400).json({
-//         message:
-//           "Faltan datos obligatorios: {company_name, CIF, address, url_web}",
+//         message: "El campo title es obligatorio para actualizar",
 //       });
 //     }
 
-//     const provider = await Provider.create(req.body);
-//     res.status(201).json({ message: `Proveedor creado: ${provider.company_name}`, provider });
+//     const product = await Product.findOneAndUpdate(
+//       { title },
+//       {
+//         price,
+//         description,
+//         provider: provider._id,
+//       },
+//       {
+//         new: true,
+//         runValidators: true,
+//       },
+//     );
+
+//     if (!product) {
+//       return res.status(404).json({
+//         message: "Producto no encontrado",
+//       });
+//     }
+
+//     res.status(200).json({
+//       message: `Producto actualizado: ${product.title}`,
+//       product,
+//     });
 //   } catch (error) {
 //     console.log(error);
 //     res.status(500).json({ message: "Error del servidor" });
@@ -44,5 +99,6 @@ const getProducts = async (req, res) => {
 
 module.exports = {
   getProducts,
-//   createProducts
+  createProduct,
+  // updateProducts,
 };

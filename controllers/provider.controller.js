@@ -34,7 +34,10 @@ const createProviders = async (req, res) => {
     }
 
     const provider = await Provider.create(req.body);
-    res.status(201).json({ message: `Proveedor creado: ${provider.company_name}`, provider });
+    res.status(201).json({
+      message: `Proveedor creado: ${provider.company_name}`,
+      provider,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error del servidor" });
@@ -42,15 +45,25 @@ const createProviders = async (req, res) => {
 };
 
 // PUT
-// http://localhost:3000/api/providers/id
+// http://localhost:3000/api/providers/
 const updateProviders = async (req, res) => {
-  const id = req.params.id;
+  const { company_name } = req.body;
 
   try {
-    const provider = await Provider.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    if (!company_name) {
+      return res.status(400).json({
+        message: "El campo company_name es obligatorio para actualizar",
+      });
+    }
+
+    const provider = await Provider.findOneAndUpdate(
+      { company_name },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
     if (!provider) {
       return res.status(404).json({
@@ -58,8 +71,10 @@ const updateProviders = async (req, res) => {
       });
     }
 
-    res.status(200).json({ message: `Proveedor actualizado: ${provider.company_name}`, provider });
-    await provider.save();
+    res.status(200).json({
+      message: `Proveedor actualizado: ${provider.company_name}`,
+      provider,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error del servidor" });
