@@ -4,7 +4,7 @@ const {getProviders, createProviders, updateProviders, deleteProviders} = requir
 
 router.get ("/", getProviders)
 router.post ("/", createProviders)
-router.put ("/:id", updateProviders)
+router.put ("/", updateProviders)
 router.delete ("/", deleteProviders)
 
 module.exports = router

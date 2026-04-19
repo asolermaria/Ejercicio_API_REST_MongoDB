@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Provider = require("../models/provider.model");
+const Product = require("../models/products.model");
 
 // GET
 // http://localhost:3000/api/providers
@@ -95,9 +96,10 @@ const deleteProviders = async (req, res) => {
       });
     }
 
+    await Product.deleteMany({ provider: provider._id }); //Borramos los también los productos del provider
+
     res.status(200).json({
       message: `Se ha borrado el proveedor: ${provider.company_name}`,
-      provider,
     });
   } catch (error) {
     console.log(error);
